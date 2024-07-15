@@ -11,7 +11,7 @@ from .commands import BaseCommandProvider, DashCmds, providers
 
 
 class Dashboard(Screen):
-
+    # TODO: add a settings button
     BINDINGS = [Binding("O o", show=False, action="run('open')")]
 
     AUTO_FOCUS = None

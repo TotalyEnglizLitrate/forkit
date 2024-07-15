@@ -13,6 +13,7 @@ class ConfigurationError(Exception):
 
 
 class Config:
+    # TODO: add a write function that modifes the configuration file
     def __init__(self, args: Namespace) -> None:
         self.file: CustomPath = args.config
         self.default: dict = load(DefaultPaths.resource_files / "Config.toml")

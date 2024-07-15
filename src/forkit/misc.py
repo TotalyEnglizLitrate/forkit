@@ -1,3 +1,6 @@
+# TODO: add a Characters class for switching between ascii and nerfont ligatures
+
+
 from __future__ import annotations
 
 from pathlib import Path
