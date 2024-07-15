@@ -1,12 +1,20 @@
+import logging
+
+from rich.logging import RichHandler
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.widgets import Footer
 
 from forkit.config.conf import Config
+from forkit.config.args import parser
+from forkit.misc import DefaultPaths, RuntimePaths
 from forkit.ui.dash import Dashboard
 from forkit.ui.commands import AppCmds
 from forkit.ui.settings import Settings
 from forkit.ui.help import Help
+
+
+logger = logging.getLogger("forkit_logger")
 
 
 class Forkit(App[None]):
@@ -44,12 +52,22 @@ class Forkit(App[None]):
 
     MODES = {"main": Dashboard, "settings": Settings, "help": Help}
 
-    CONF: Config = Config()
-
     def compose(self) -> ComposeResult:
         self.switch_mode("main")
         yield Footer()
 
 
-def main():
-    Forkit().run()
+class Context:
+    def __init__(self) -> None:
+        self.cmd_line_args = parser.parse_args()
+        logging.basicConfig(
+            filename=self.cmd_line_args.log_file, handlers=[RichHandler()]
+        )
+        self.conf = Config(self.cmd_line_args)
+        self.app = Forkit()
+        self.DefaultPaths = DefaultPaths
+        self.RuntimePaths = RuntimePaths
+
+
+ctx = Context()
+main = lambda: ctx.app.run()

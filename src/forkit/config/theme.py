@@ -1,4 +1,4 @@
-from re import compile 
+from re import compile
 from types import SimpleNamespace
 
 from toml import load
@@ -6,23 +6,21 @@ from toml import load
 from forkit.misc import DefaultPaths, RuntimePaths
 
 
-patterns: SimpleNamespace = SimpleNamespace(till_255=r"(?:[0-9]|[2-8][0-9]|1[0-9]|9[0-9]|1[1-9][0-9]|10[0-9]|2[0-4][0-9]|25[0-5])",
-                           float_0_1=r"(?:0?\\.[0-9][0-9]*|1\\.0[0-9]*)",
-                           hex_digit=r"[0-9A-Fa-f]"
+patterns: SimpleNamespace = SimpleNamespace(
+    till_255=r"(?:[0-9]|[2-8][0-9]|1[0-9]|9[0-9]|1[1-9][0-9]|10[0-9]|2[0-4][0-9]|25[0-5])",
+    float_0_1=r"(?:0?\\.[0-9][0-9]*|1\\.0[0-9]*)",
+    hex_digit=r"[0-9A-Fa-f]",
 )
 space = compile(r"\s*")
 
-three_tpl_255 = (rf"{patterns.till_255}, "
-                rf"{patterns.till_255}, "
-                rf"{patterns.till_255}")
+three_tpl_255 = (
+    rf"{patterns.till_255}, " rf"{patterns.till_255}, " rf"{patterns.till_255}"
+)
 
 
 rgb = compile(rf"^rgb\({three_tpl_255}\)$")
 rgba = compile(rf"^rgba\({three_tpl_255}, {patterns.float_0_1}\)$")
-hex = compile(
-                rf"^#(?:{patterns.hex_digit}{{6}}|" 
-                rf"{patterns.hex_digit}{{8}})$"
-)
+hex = compile(rf"^#(?:{patterns.hex_digit}{{6}}|" rf"{patterns.hex_digit}{{8}})$")
 opacity = compile(rf"^{patterns.float_0_1}$")
 
 colours = set()
@@ -36,9 +34,10 @@ types = SimpleNamespace(
 
 class Theme:
     def __init__(self) -> None:
-        #TODO: add file.exists() checks and log errors
+        # TODO: add file.exists() checks and log errors
         self.file = RuntimePaths.theme_file
-        self.default = DefaultPaths.theme_file
+        self.default_file = DefaultPaths.theme_file
+
         self.custom = load(self.file)
         self.theme_vals = []
         for k, v in self.custom:
@@ -52,7 +51,6 @@ class Theme:
                     raise NotImplementedError
             else:
                 self.theme_vals.append(f"${k}: {v};")
-    
 
     @staticmethod
     def is_valid(key: str, value: str):
@@ -68,6 +66,3 @@ class Theme:
                 return value
         else:
             return key
-
-
-
