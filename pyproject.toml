@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools >= 58.0"]
+build-backed = "setuptools.build.meta"
+
+[project]
+name = "forkit-textual"
+version = "0.1a"
+dependencies = ["textual >= 0.58.1", "platformdirs == 4.2.2", "toml == 0.10.2"]
+requires-python = ">= 3.10"
+
+[project.scripts]
+forkit = "forkit.app:main"
